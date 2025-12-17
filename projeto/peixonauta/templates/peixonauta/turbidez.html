@@ -1,0 +1,160 @@
+{% extends 'peixonauta/ok.html' %}
+{% load static %}
+
+
+    {% block styles %}
+    <link rel="stylesheet" href="{% static 'peixonauta/css/turbidez.css' %}?v=2">
+    {% endblock %}
+    <title>Document</title>
+       {% block content %}
+
+<div id="alerta-global" class="alerta">
+    ⚠️ Valor em alerta: verifique os níveis dos tanques!
+</div>
+<div class="B">TANQUE B:✅ Tudo certo! Níveis de turbidez normais.</div>
+<div class="C">TANQUE C:✅ Tudo certo! Níveis de turbidez normais.</div>
+<div class="D">TANQUE D:✅ Tudo certo! Níveis de turbidez normais.</div>
+    <main>
+
+        <section>
+<div class="titulo-explicacao">
+<h3 class="section-title">Dados em tempo real(com atraso de 10 segundos):</h3>
+<h5>Posicionamento dos tanques:</h5>
+        <img src="{% static 'peixonauta/img/tanques.jpg' %}">
+         <h6>A turbidez mostra a quantidade de partículas na água, como barro e matéria orgânica. Quando alta, pode afetar a respiração dos peixes e favorecer doenças. Controlá-la é essencial para manter a água limpa e saudável.💧💧💧</h6>
+</div>
+<div class="dados-container">
+          <h3>Tanque A:</h3>
+
+    <div class="cards">
+      <div class="card alerta">
+        <h2 id="turbidez_ultimo"></h2>
+        <span>NTU (atual)</span>
+      </div>
+      <div class="card alerta">
+        <h2 id="turbidez_penultimo" ></h2>
+        <span>5 min</span>
+      </div>
+      <div class="card alerta">
+        <h2 id="turbidez_antepenultimo" ></h2>
+        <span>10 min</span>
+        
+      </div>
+    </div>
+
+    <div class="dados-container">
+          <h3>Tanque B:</h3>
+    <div class="cards">
+      <div class="card alerta">
+        <h2>24</h2>
+        <span>NTU (atual)</span>
+      </div>
+      <div class="card alerta">
+        <h2>22</h2>
+        <span>5 min</span>
+      </div>
+      <div class="card alerta">
+        <h2>23</h2>
+        <span>10 min</span>
+      </div>
+    </div>
+
+    <div class="dados-container">
+          <h3>Tanque C:</h3>
+    <div class="cards">
+      <div class="card alerta">
+        <h2>23</h2>
+        <span>NTU (atual)</span>
+      </div>
+      <div class="card alerta">
+        <h2>22</h2>
+        <span>5 min</span>
+      </div>
+      <div class="card alerta">
+        <h2>24</h2>
+        <span>10 min</span>
+      </div>
+    </div>
+
+    <div class="dados-container">
+          <h3>Tanque D:</h3>
+    <div class="cards">
+      <div class="card alerta">
+        <h2>22</h2>
+        <span>NTU (atual)</span>
+      </div>
+      <div class="card alerta">
+        <h2>22</h2>
+        <span>5 min</span>
+      </div>
+      <div class="card alerta">
+        <h2>23</h2>
+        <span>10 min</span>
+      </div>
+    </div>
+    <script>
+async function atualizarDados() {
+    const resposta = await fetch("/api/dados/");
+    const dados = await resposta.json();
+
+
+        // Turbidez
+        document.getElementById("turbidez_ultimo").innerText = dados.turbidez.ultimo ?? "--";
+        document.getElementById("turbidez_penultimo").innerText = dados.turbidez.penultimo ?? "--";
+        document.getElementById("turbidez_antepenultimo").innerText = dados.turbidez.antepenultimo ?? "--";
+
+         const alertaDiv = document.getElementById("alerta-global");
+    
+    if (10< dados.turbidez.ultimo < 40 ) {
+        alertaDiv.style.display = "block";
+    alertaDiv.innerText = `TANQUE A:⚠️ Atenção: nível de turbidez (${dados.turbidez.ultimo}) está fora do normal!`;
+
+    // remove verde, aplica piscar (amarelo)
+    alertaDiv.classList.remove("verde");
+    alertaDiv.classList.add("piscar");
+    } else {
+       alertaDiv.style.display = "block";
+    alertaDiv.innerText = "TANQUE A:✅ Tudo certo! Níveis de turbidez normais.";
+
+    // remove piscar e aplica verde
+    alertaDiv.classList.remove("piscar");
+    alertaDiv.classList.add("verde");
+    }
+    } 
+
+
+// Atualiza a cada 5 segundos
+setInterval(atualizarDados, 5000);
+
+// Atualiza já no início
+atualizarDados();
+
+//banco de dados 
+
+</script>
+            
+   
+      <!--gráfico-->
+      <div class="amon">
+        <div class="chart">
+                        <h1>Média mensal de cada mês:</h1>
+
+            <canvas id="barchart" width="800" height="350"></canvas>
+        
+        </div>
+     
+      <!--gráfico-->
+        </div>
+        </section>
+ <script src="{% static 'peixonauta/js/mobile-navbar.js' %}" defer></script>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
+     <script src="{% static 'peixonauta/js/chartamon3.js' %}?v=7"></script>
+    </main>
+    
+      {% endblock %}
+</body>
+
+</html>
+   
+
+

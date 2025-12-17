@@ -1,0 +1,163 @@
+{% extends 'peixonauta/ok.html' %}
+{% load static %}
+
+
+    {% block styles %}
+    <link rel="stylesheet" href="{% static 'peixonauta/css/temperatura.css' %}?v=2">
+    {% endblock %}
+    <title>Document</title>
+       {% block content %}
+
+
+<div id="alerta-global" class="alerta">
+    ⚠️ Valor em alerta: verifique os níveis dos tanques!
+</div>
+<div class="B">TANQUE B:✅ Tudo certo! Níveis de temperatura normais.</div>
+<div class="C">TANQUE C:✅ Tudo certo! Níveis de temperatura normais.</div>
+<div class="D">TANQUE D:✅ Tudo certo! Níveis de temperatura normais.</div>
+    <main>
+
+        <section>
+<div class="titulo-explicacao">
+<h3 class="section-title">Dados em tempo real(com atraso de 10 segundos):</h3>
+<h5>Posicionamento dos tanques:</h5>
+        <img src="{% static 'peixonauta/img/tanques.jpg' %}">
+         <h6>A temperatura da água afeta o metabolismo, crescimento e imunidade dos peixes. Variações bruscas podem causar estresse e facilitar doenças. Manter a temperatura ideal garante saúde e equilíbrio no ambiente.💦💦💦</h6>
+</div>
+<div class="dados-container">
+          <h3>Tanque A:</h3>
+
+    <div class="cards">
+      <div class="card alerta">
+        <h2 id="temperatura_ultimo"></h2>
+        <span>°C (atual)</span>
+      </div>
+      <div class="card alerta">
+        <h2 id="temperatura_penultimo" ></h2>
+        <span>5 min</span>
+      </div>
+      <div class="card alerta">
+        <h2 id="temperatura_antepenultimo" ></h2>
+        <span>10 min</span>
+        
+      </div>
+    </div>
+
+    <div class="dados-container">
+          <h3>Tanque B:</h3>
+    <div class="cards">
+      <div class="card alerta">
+        <h2>18.99</h2>
+        <span>°C (atual)</span>
+      </div>
+      <div class="card alerta">
+        <h2>19.72</h2>
+        <span>5 min</span>
+      </div>
+      <div class="card bb">
+        <h2>18.85</h2>
+        <span>10 min</span>
+      </div>
+    </div>
+
+    <div class="dados-container">
+          <h3>Tanque C:</h3>
+    <div class="cards">
+      <div class="card alerta">
+        <h2>18.95</h2>
+        <span>°C (atual)</span>
+      </div>
+      <div class="card alerta">
+        <h2>17.77</h2>
+        <span>5 min</span>
+      </div>
+      <div class="card alerta">
+        <h2>20.00</h2>
+        <span>10 min</span>
+      </div>
+    </div>
+
+    <div class="dados-container">
+          <h3>Tanque D:</h3>
+    <div class="cards">
+      <div class="card alerta">
+        <h2>18.29</h2>
+        <span>°C (atual)</span>
+      </div>
+      <div class="card alerta">
+        <h2>18.17</h2>
+        <span>5 min</span>
+      </div>
+      <div class="card alerta">
+        <h2>18.48</h2>
+        <span>10 min</span>
+      </div>
+    </div>
+    <script>
+async function atualizarDados() {
+    const resposta = await fetch("/api/dados/");
+    const dados = await resposta.json();
+
+      
+        document.getElementById("temperatura_ultimo").innerText = dados.temperatura.ultimo ?? "--";
+        document.getElementById("temperatura_penultimo").innerText = dados.temperatura.penultimo ?? "--";
+        document.getElementById("temperatura_antepenultimo").innerText = dados.temperatura.antepenultimo ?? "--";
+
+        
+       
+        const alertaDiv = document.getElementById("alerta-global");
+    
+    if (24 < dados.temperatura.ultimo < 30 ) {
+        alertaDiv.style.display = "block";
+    alertaDiv.innerText = `TANQUE A:⚠️ Atenção: nível de temperatura (${dados.temperatura.ultimo}) está fora do normal!`;
+
+    // remove verde, aplica piscar (amarelo)
+    alertaDiv.classList.remove("verde");
+    alertaDiv.classList.add("piscar");
+    } else {
+       alertaDiv.style.display = "block";
+    alertaDiv.innerText = "TANQUE B:✅ Tudo certo! Níveis de temperatura normais.";
+
+    // remove piscar e aplica verde
+    alertaDiv.classList.remove("piscar");
+    alertaDiv.classList.add("verde");
+    }
+
+    } 
+
+
+// Atualiza a cada 5 segundos
+setInterval(atualizarDados, 5000);
+
+// Atualiza já no início
+atualizarDados();
+
+//banco de dados 
+
+</script>
+            
+   
+      <!--gráfico-->
+      <div class="amon">
+        <div class="chart">
+                        <h1>Média mensal de cada mês:</h1>
+
+            <canvas id="barchart" width="800" height="350"></canvas>
+        
+        </div>
+     
+      <!--gráfico-->
+        </div>
+        </section>
+ <script src="{% static 'peixonauta/js/mobile-navbar.js' %}" defer></script>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
+     <script src="{% static 'peixonauta/js/chartamon2.js' %}?v=1"></script>
+    </main>
+    
+      {% endblock %}
+</body>
+
+</html>
+   
+
+

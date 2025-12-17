@@ -1,0 +1,138 @@
+{% load static%}
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, 
+    initial-scale=1.0">
+    {% block styles %} 
+    <link rel="stylesheet" href="{% static 'peixonauta/css/ok.css' %}?v=3">
+    
+    
+    {% endblock %}
+    <title>Monitoramento</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a class="logo" href="{% url 'inicio' %}">𓆝PEIXONAUTA𓆞</a>
+            <div class="mobile-menu">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+            <ul class="nav-list">
+                <li><a href="{% url 'amonia' %}">Amônia</a></li>
+                <li><a href="{% url 'oxigenio' %}">Oxigênio</a></li>
+                <li><a href="{% url 'ph' %}">Ph</a></li>
+                <li><a href="{% url 'temperatura' %}">Temperatura</a></li>
+                <li><a href="{% url 'turbidez' %}">Turbidez</a></li>
+            </ul>
+        </nav>
+    </header>
+    {% block content %}
+  
+    <main>
+         
+
+        <section>
+ <div class="bem">Bem vindo à</div>
+ <div class="bem1">psicultura inteligente! </div>
+ <div class="intro">Clique no menu acima para o detalhamento de cada parâmetro</div>
+
+<!--banco de dados--> 
+<div class="inicio-container ">                 
+<div class="inicio">
+<h3 class="a">Amônia</h3>
+<img src="{% static 'peixonauta/img/amonia.png' %}">
+<p>Tanque A: <span id="amonia_ultimo">--</span></p>
+<p>Tanque B: 0.00</p>
+<p>Tanque C: 0.01</p>
+<p>Tanque D: 0.01</p>
+</div>
+<div class="inicio">
+<h3 class="o">Oxigênio</h3>
+<img src="{% static 'peixonauta/img/oxigenio.png' %}">
+<p>Tanque A: <span id="oxigenio_ultimo">--</span></p>
+<p>Tanque B: 3</p>
+<p>Tanque C: 5</p>
+<p>Tanque D: 2</p>
+</div>
+<div class="inicio">
+<h3 class="t">Temperatura</h3>
+<img src="{% static 'peixonauta/img/temperatura.png' %}">
+<p>Tanque A: <span id="temperatura_ultimo">--</span></p>
+<p>Tanque B: 18.99</p>
+<p>Tanque C: 18.95</p>
+<p>Tanque D: 18.29</p>
+
+</div>
+<div class="inicio">
+<h3 class="p">pH</h3>
+<img src="{% static 'peixonauta/img/ph3.png' %}">
+<p>Tanque A: <span id="ph_ultimo">--</span></p>
+<p>Tanque B: 7</p>
+<p>Tanque C: 7</p>
+<p>Tanque D: 7</p>  
+</div>
+<div class="inicio">
+<h3 class="tt">Turbidez</h3>
+<img src="{% static 'peixonauta/img/turbidez.png' %}">
+<p>Tanque A: <span id="turbidez_ultimo">--</span></p>
+<p>Tanque B: 24</p>
+<p>Tanque C: 23</p>
+<p>Tanque D: 22</p>
+</div>
+</div>  
+
+<script>
+async function atualizarDados() {
+    const resposta = await fetch("/api/dados/");
+    const dados = await resposta.json();
+
+       // Amônia
+        document.getElementById("amonia_ultimo").innerText = dados.amonia.ultimo ?? "--";
+       
+
+        // pH
+        document.getElementById("ph_ultimo").innerText = dados.ph.ultimo ?? "--";
+     
+
+        // Temperatura
+        document.getElementById("temperatura_ultimo").innerText = dados.temperatura.ultimo ?? "--";
+        
+
+        // Turbidez
+        document.getElementById("turbidez_ultimo").innerText = dados.turbidez.ultimo ?? "--";
+       
+        document.getElementById("oxigenio_ultimo").innerText = dados.oxigenio.ultimo ?? "--";
+
+        
+    } 
+ 
+
+
+// Atualiza a cada 5 segundos
+setInterval(atualizarDados, 5000);
+
+// Atualiza já no início
+atualizarDados();
+
+//banco de dados 
+
+</script>
+
+           
+        </section>
+   
+
+    </main>
+     {% endblock %}
+     <script src="{% static 'peixonauta/js/mobile-navbar.js' %}" defer></script>
+</body>
+</html>
+
+
