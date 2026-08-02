@@ -142,9 +142,9 @@ Em breve serão adicionadas imagens da interface e demonstrações do sistema.
 
 ---
 
-## 👩‍💻 Desenvolvedora
+## 👩‍💻 Desenvolvedores
 
-**Letícia Tomomi Matsuo**
+**Camila Vitória Faria, Giovana Souza Vilela Desidério, Letícia Tomomi Matsuo e Matheus Barbosa Ribeiro**
 
 GitHub: https://github.com/letmatsuo
 
